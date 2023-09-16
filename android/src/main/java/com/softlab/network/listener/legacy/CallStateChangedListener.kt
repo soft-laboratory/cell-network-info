@@ -9,7 +9,7 @@ import com.softlab.network.event.EventType
 class CallStateChangedListener(private val eventEmitter: EventEmitter) : PhoneStateListener() {
 
     @Deprecated("Deprecated in Java")
-    override fun onCallStateChanged(state: Int, phoneNumber: String) {
+    override fun onCallStateChanged(state: Int, phoneNumber: String?) {
         val result: WritableMap = Arguments.createMap()
         result.putInt("state", state)
         result.putString("phoneNumber", phoneNumber)

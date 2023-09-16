@@ -1,8 +1,9 @@
-import type { SignalStrength } from './SignalStrength';
-import type { CellInfo } from './CellInfo';
+import type { SignalStrength } from './types/SignalStrength';
+import type { CellInfo } from './types/CellInfo';
+import type { DisplayInfo } from './types/DisplayInfo';
 
 /**
- * Available Network Info events.  This replaces the events provided by the
+ * Available Network Info events. This replaces the events provided by the
  * NativeModule.
  */
 export enum NetworkInfoEventType {
@@ -29,7 +30,6 @@ export enum NetworkInfoEventType {
  */
 export interface NetworkInfoEvent {
   eventType: NetworkInfoEventType;
-  timestamp: string;
 }
 
 /**
@@ -45,6 +45,13 @@ export interface StateChangeEvent extends NetworkInfoEvent {
  */
 export interface SignalStrengthChangedEvent extends NetworkInfoEvent {
   signalStrength: SignalStrength;
+}
+
+/**
+ * Signal strength changed events.
+ */
+export interface DisplayInfoChangedEvent extends NetworkInfoEvent {
+  displayInfo: DisplayInfo;
 }
 
 /**

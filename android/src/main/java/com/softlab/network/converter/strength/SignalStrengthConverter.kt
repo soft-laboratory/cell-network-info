@@ -22,17 +22,25 @@ class SignalStrengthConverter {
     companion object {
         fun convert(signalStrength: SignalStrength): WritableMap {
             val signalStrengthMap: WritableMap = Arguments.createMap()
-            signalStrengthMap.putInt(SignalStrengthConstants.level, signalStrength.level)
-            signalStrengthMap.putString(
-                SignalStrengthConstants.timestampMillis,
-                signalStrength.timestampMillis.toString()
-            )
-            val cellSignalStrengths =
-                signalStrength.cellSignalStrengths.stream().map { convert(it) }.toList()
-            signalStrengthMap.putArray(
-                SignalStrengthConstants.cellSignalStrengths,
-                cellSignalStrengths
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                signalStrengthMap.putInt(SignalStrengthConstants.level, signalStrength.level)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                signalStrengthMap.putString(
+                    SignalStrengthConstants.timestampMillis,
+                    signalStrength.timestampMillis.toString()
+                )
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val cellSignalStrengths =
+                    signalStrength.cellSignalStrengths.stream().map { convert(it) }.toList()
+                signalStrengthMap.putArray(
+                    SignalStrengthConstants.cellSignalStrengths,
+                    cellSignalStrengths
+                )
+            }
 
             return signalStrengthMap
         }
@@ -58,15 +66,23 @@ class SignalStrengthConverter {
         private fun convertSignalStrength(signalStrength: CellSignalStrengthGsm): WritableMap {
             val signalStrengthMap: WritableMap = Arguments.createMap()
             processSignalStrength(signalStrength, signalStrengthMap)
-            signalStrengthMap.putInt(
-                SignalStrengthConstants.bitErrorRate,
-                signalStrength.bitErrorRate
-            )
-            signalStrengthMap.putInt(SignalStrengthConstants.rssi, signalStrength.rssi)
-            signalStrengthMap.putInt(
-                SignalStrengthConstants.timingAdvance,
-                signalStrength.timingAdvance
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                signalStrengthMap.putInt(
+                    SignalStrengthConstants.bitErrorRate,
+                    signalStrength.bitErrorRate
+                )
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                signalStrengthMap.putInt(SignalStrengthConstants.rssi, signalStrength.rssi)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                signalStrengthMap.putInt(
+                    SignalStrengthConstants.timingAdvance,
+                    signalStrength.timingAdvance
+                )
+            }
 
             return signalStrengthMap
         }
@@ -74,7 +90,9 @@ class SignalStrengthConverter {
         private fun convertSignalStrength(signalStrength: CellSignalStrengthWcdma): WritableMap {
             val signalStrengthMap: WritableMap = Arguments.createMap()
             processSignalStrength(signalStrength, signalStrengthMap)
-            signalStrengthMap.putInt(SignalStrengthConstants.ecNo, signalStrength.ecNo)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                signalStrengthMap.putInt(SignalStrengthConstants.ecNo, signalStrength.ecNo)
+            }
 
             return signalStrengthMap
         }
@@ -92,15 +110,24 @@ class SignalStrengthConverter {
             val signalStrengthMap: WritableMap = Arguments.createMap()
             processSignalStrength(signalStrength, signalStrengthMap)
 
-            signalStrengthMap.putInt(SignalStrengthConstants.cqi, signalStrength.cqi)
-            signalStrengthMap.putInt(
-                SignalStrengthConstants.cqiTableIndex,
-                signalStrength.cqiTableIndex
-            )
-            signalStrengthMap.putInt(SignalStrengthConstants.rsrp, signalStrength.rsrp)
-            signalStrengthMap.putInt(SignalStrengthConstants.rsrq, signalStrength.rsrq)
-            signalStrengthMap.putInt(SignalStrengthConstants.rssi, signalStrength.rssi)
-            signalStrengthMap.putInt(SignalStrengthConstants.rssnr, signalStrength.rssnr)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+                signalStrengthMap.putInt(
+                    SignalStrengthConstants.cqiTableIndex,
+                    signalStrength.cqiTableIndex
+                )
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                signalStrengthMap.putInt(SignalStrengthConstants.rsrp, signalStrength.rsrp)
+                signalStrengthMap.putInt(SignalStrengthConstants.rsrq, signalStrength.rsrq)
+                signalStrengthMap.putInt(SignalStrengthConstants.rssnr, signalStrength.rssnr)
+                signalStrengthMap.putInt(SignalStrengthConstants.cqi, signalStrength.cqi)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                signalStrengthMap.putInt(SignalStrengthConstants.rssi, signalStrength.rssi)
+            }
             signalStrengthMap.putInt(
                 SignalStrengthConstants.timingAdvance,
                 signalStrength.timingAdvance
@@ -114,13 +141,15 @@ class SignalStrengthConverter {
             val signalStrengthMap: WritableMap = Arguments.createMap()
             processSignalStrength(signalStrength, signalStrengthMap)
 
-            val csiCqiReport = WritableNativeArray()
-            signalStrength.csiCqiReport.forEach { csiCqiReport.pushInt(it) }
-            signalStrengthMap.putArray(SignalStrengthConstants.csiCqiReport, csiCqiReport)
-            signalStrengthMap.putInt(
-                SignalStrengthConstants.csiCqiTableIndex,
-                signalStrength.csiCqiTableIndex
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val csiCqiReport = WritableNativeArray()
+                signalStrength.csiCqiReport.forEach { csiCqiReport.pushInt(it) }
+                signalStrengthMap.putArray(SignalStrengthConstants.csiCqiReport, csiCqiReport)
+                signalStrengthMap.putInt(
+                    SignalStrengthConstants.csiCqiTableIndex,
+                    signalStrength.csiCqiTableIndex
+                )
+            }
             signalStrengthMap.putInt(SignalStrengthConstants.csiRsrp, signalStrength.csiRsrp)
             signalStrengthMap.putInt(SignalStrengthConstants.csiRsrq, signalStrength.csiRsrq)
             signalStrengthMap.putInt(SignalStrengthConstants.csiSinr, signalStrength.csiSinr)

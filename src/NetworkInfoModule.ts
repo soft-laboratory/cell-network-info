@@ -5,6 +5,7 @@ import type {
   NetworkInfoEventListener,
   NetworkInfoEventSubscription,
   SignalStrengthChangedEvent,
+  DisplayInfoChangedEvent,
 } from './NetworkInfoEvent';
 import { NetworkInfoEventType } from './NetworkInfoEvent';
 import type NetworkInfoNativeModule from './NetworkInfoNativeModule';
@@ -62,6 +63,15 @@ export default class NetworkInfoModule {
   ): NetworkInfoEventSubscription {
     return this.createNetworkInfoEventSubscription(
       NetworkInfoEventType.SIGNAL_STRENGTH_CHANGED,
+      listener
+    );
+  }
+
+  onDisplayInfoChanged(
+    listener: NetworkInfoEventListener<DisplayInfoChangedEvent>
+  ): NetworkInfoEventSubscription {
+    return this.createNetworkInfoEventSubscription(
+      NetworkInfoEventType.DISPLAY_INFO_CHANGED,
       listener
     );
   }

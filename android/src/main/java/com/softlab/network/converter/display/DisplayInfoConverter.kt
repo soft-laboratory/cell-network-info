@@ -1,9 +1,12 @@
 package com.softlab.network.converter.display
 
+import android.os.Build
 import android.telephony.TelephonyDisplayInfo
+import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 
+@RequiresApi(Build.VERSION_CODES.R)
 class DisplayInfoConverter {
 
     companion object {

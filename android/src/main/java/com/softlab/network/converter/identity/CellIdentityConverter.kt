@@ -8,6 +8,7 @@ import android.telephony.CellIdentityLte
 import android.telephony.CellIdentityNr
 import android.telephony.CellIdentityTdscdma
 import android.telephony.CellIdentityWcdma
+import android.telephony.ClosedSubscriberGroupInfo
 import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
@@ -37,29 +38,42 @@ class CellIdentityConverter {
 
         private fun convert(cellIdentity: CellIdentityGsm): WritableMap {
             val cellIdentityMap: WritableMap = Arguments.createMap()
-            processCellIdentity(cellIdentity, cellIdentityMap)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                processCellIdentity(cellIdentity, cellIdentityMap)
+            }
 
-            cellIdentityMap.putArray(
-                SignalIdentityConstants.additionalPlmns,
-                cellIdentity.additionalPlmns
-            )
-            cellIdentityMap.putInt(SignalIdentityConstants.arfcn, cellIdentity.arfcn)
-            cellIdentityMap.putInt(SignalIdentityConstants.bsic, cellIdentity.bsic)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                cellIdentityMap.putArray(
+                    SignalIdentityConstants.additionalPlmns,
+                    cellIdentity.additionalPlmns
+                )
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                cellIdentityMap.putInt(SignalIdentityConstants.arfcn, cellIdentity.arfcn)
+                cellIdentityMap.putInt(SignalIdentityConstants.bsic, cellIdentity.bsic)
+            }
+
             cellIdentityMap.putInt(SignalIdentityConstants.cid, cellIdentity.cid)
             cellIdentityMap.putInt(SignalIdentityConstants.lac, cellIdentity.lac)
-            cellIdentityMap.putString(SignalIdentityConstants.mcc, cellIdentity.mccString)
-            cellIdentityMap.putString(SignalIdentityConstants.mnc, cellIdentity.mncString)
-            cellIdentityMap.putString(
-                SignalIdentityConstants.mobileNetworkOperator,
-                cellIdentity.mobileNetworkOperator
-            )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                cellIdentityMap.putString(SignalIdentityConstants.mcc, cellIdentity.mccString)
+                cellIdentityMap.putString(SignalIdentityConstants.mnc, cellIdentity.mncString)
+                cellIdentityMap.putString(
+                    SignalIdentityConstants.mobileNetworkOperator,
+                    cellIdentity.mobileNetworkOperator
+                )
+            }
 
             return cellIdentityMap
         }
 
         private fun convert(cellIdentity: CellIdentityCdma): WritableMap {
             val cellIdentityMap: WritableMap = Arguments.createMap()
-            processCellIdentity(cellIdentity, cellIdentityMap)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                processCellIdentity(cellIdentity, cellIdentityMap)
+            }
 
             cellIdentityMap.putInt(
                 SignalIdentityConstants.basestationId,
@@ -78,11 +92,13 @@ class CellIdentityConverter {
             val cellIdentityMap: WritableMap = Arguments.createMap()
             processCellIdentity(cellIdentity, cellIdentityMap)
 
-            cellIdentityMap.putArray(
-                SignalIdentityConstants.additionalPlmns,
-                cellIdentity.additionalPlmns
-            )
-            cellIdentityMap.putArray(SignalIdentityConstants.bands, cellIdentity.bands)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                cellIdentityMap.putArray(
+                    SignalIdentityConstants.additionalPlmns,
+                    cellIdentity.additionalPlmns
+                )
+                cellIdentityMap.putArray(SignalIdentityConstants.bands, cellIdentity.bands)
+            }
             cellIdentityMap.putString(SignalIdentityConstants.mcc, cellIdentity.mccString)
             cellIdentityMap.putString(SignalIdentityConstants.mnc, cellIdentity.mncString)
             cellIdentityMap.putDouble(SignalIdentityConstants.nci, cellIdentity.nci.toDouble())
@@ -95,26 +111,35 @@ class CellIdentityConverter {
 
         private fun convert(cellIdentity: CellIdentityLte): WritableMap {
             val cellIdentityMap: WritableMap = Arguments.createMap()
-            processCellIdentity(cellIdentity, cellIdentityMap)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                processCellIdentity(cellIdentity, cellIdentityMap)
+            }
 
-            cellIdentityMap.putArray(
-                SignalIdentityConstants.additionalPlmns,
-                cellIdentity.additionalPlmns
-            )
-            cellIdentityMap.putArray(SignalIdentityConstants.bands, cellIdentity.bands)
-            cellIdentityMap.putInt(SignalIdentityConstants.bandwidth, cellIdentity.bandwidth)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                cellIdentityMap.putArray(
+                    SignalIdentityConstants.additionalPlmns,
+                    cellIdentity.additionalPlmns
+                )
+                cellIdentityMap.putMap(
+                    SignalIdentityConstants.closedSubscriberGroupInfo,
+                    convert(cellIdentity.closedSubscriberGroupInfo)
+                )
+                cellIdentityMap.putArray(SignalIdentityConstants.bands, cellIdentity.bands)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                cellIdentityMap.putInt(SignalIdentityConstants.bandwidth, cellIdentity.bandwidth)
+                cellIdentityMap.putString(SignalIdentityConstants.mcc, cellIdentity.mccString)
+                cellIdentityMap.putString(SignalIdentityConstants.mnc, cellIdentity.mncString)
+                cellIdentityMap.putString(
+                    SignalIdentityConstants.mobileNetworkOperator,
+                    cellIdentity.mobileNetworkOperator
+                )
+            }
             cellIdentityMap.putInt(SignalIdentityConstants.cid, cellIdentity.ci)
-            cellIdentityMap.putString(
-                SignalIdentityConstants.closedSubscriberGroupInfo,
-                cellIdentity.closedSubscriberGroupInfo?.toString()
-            )
-            cellIdentityMap.putInt(SignalIdentityConstants.earfcn, cellIdentity.earfcn)
-            cellIdentityMap.putString(SignalIdentityConstants.mcc, cellIdentity.mccString)
-            cellIdentityMap.putString(SignalIdentityConstants.mnc, cellIdentity.mncString)
-            cellIdentityMap.putString(
-                SignalIdentityConstants.mobileNetworkOperator,
-                cellIdentity.mobileNetworkOperator
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                cellIdentityMap.putInt(SignalIdentityConstants.earfcn, cellIdentity.earfcn)
+            }
             cellIdentityMap.putInt(SignalIdentityConstants.pci, cellIdentity.pci)
             cellIdentityMap.putInt(SignalIdentityConstants.tac, cellIdentity.tac)
 
@@ -126,15 +151,17 @@ class CellIdentityConverter {
             val cellIdentityMap: WritableMap = Arguments.createMap()
             processCellIdentity(cellIdentity, cellIdentityMap)
 
-            cellIdentityMap.putArray(
-                SignalIdentityConstants.additionalPlmns,
-                cellIdentity.additionalPlmns
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                cellIdentityMap.putArray(
+                    SignalIdentityConstants.additionalPlmns,
+                    cellIdentity.additionalPlmns
+                )
+                cellIdentityMap.putMap(
+                    SignalIdentityConstants.closedSubscriberGroupInfo,
+                    convert(cellIdentity.closedSubscriberGroupInfo)
+                )
+            }
             cellIdentityMap.putInt(SignalIdentityConstants.cid, cellIdentity.cid)
-            cellIdentityMap.putString(
-                SignalIdentityConstants.closedSubscriberGroupInfo,
-                cellIdentity.closedSubscriberGroupInfo?.toString()
-            )
             cellIdentityMap.putInt(SignalIdentityConstants.cpid, cellIdentity.cpid)
             cellIdentityMap.putInt(SignalIdentityConstants.lac, cellIdentity.lac)
             cellIdentityMap.putString(SignalIdentityConstants.mcc, cellIdentity.mccString)
@@ -150,30 +177,42 @@ class CellIdentityConverter {
 
         private fun convert(cellIdentity: CellIdentityWcdma): WritableMap {
             val cellIdentityMap: WritableMap = Arguments.createMap()
-            processCellIdentity(cellIdentity, cellIdentityMap)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                processCellIdentity(cellIdentity, cellIdentityMap)
+            }
 
-            cellIdentityMap.putArray(
-                SignalIdentityConstants.additionalPlmns,
-                cellIdentity.additionalPlmns
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                cellIdentityMap.putArray(
+                    SignalIdentityConstants.additionalPlmns,
+                    cellIdentity.additionalPlmns
+                )
+                cellIdentityMap.putMap(
+                    SignalIdentityConstants.closedSubscriberGroupInfo,
+                    convert(cellIdentity.closedSubscriberGroupInfo)
+                )
+            }
+
             cellIdentityMap.putInt(SignalIdentityConstants.cid, cellIdentity.cid)
-            cellIdentityMap.putString(
-                SignalIdentityConstants.closedSubscriberGroupInfo,
-                cellIdentity.closedSubscriberGroupInfo?.toString()
-            )
             cellIdentityMap.putInt(SignalIdentityConstants.lac, cellIdentity.lac)
-            cellIdentityMap.putString(SignalIdentityConstants.mcc, cellIdentity.mccString)
-            cellIdentityMap.putString(SignalIdentityConstants.mnc, cellIdentity.mncString)
-            cellIdentityMap.putString(
-                SignalIdentityConstants.mobileNetworkOperator,
-                cellIdentity.mobileNetworkOperator
-            )
             cellIdentityMap.putInt(SignalIdentityConstants.psc, cellIdentity.psc)
-            cellIdentityMap.putInt(SignalIdentityConstants.uarfcn, cellIdentity.uarfcn)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                cellIdentityMap.putString(SignalIdentityConstants.mcc, cellIdentity.mccString)
+                cellIdentityMap.putString(SignalIdentityConstants.mnc, cellIdentity.mncString)
+                cellIdentityMap.putString(
+                    SignalIdentityConstants.mobileNetworkOperator,
+                    cellIdentity.mobileNetworkOperator
+                )
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                cellIdentityMap.putInt(SignalIdentityConstants.uarfcn, cellIdentity.uarfcn)
+            }
 
             return cellIdentityMap
         }
 
+        @RequiresApi(Build.VERSION_CODES.P)
         private fun processCellIdentity(
             cellIdentity: CellIdentity,
             cellIdentityMap: WritableMap
@@ -186,6 +225,20 @@ class CellIdentityConverter {
                 SignalIdentityConstants.operatorAlphaShort,
                 cellIdentity.operatorAlphaShort?.toString()
             )
+        }
+
+        @RequiresApi(Build.VERSION_CODES.R)
+        private fun convert(closedSubscriberGroupInfo: ClosedSubscriberGroupInfo?): WritableMap? {
+            val result: WritableMap = Arguments.createMap()
+
+            if (closedSubscriberGroupInfo == null) {
+                return null
+            }
+
+            result.putString("homeNodebName", closedSubscriberGroupInfo.homeNodebName)
+            result.putInt("csgIdentity", closedSubscriberGroupInfo.csgIdentity)
+            result.putBoolean("csgIndicator", closedSubscriberGroupInfo.csgIndicator)
+            return result
         }
     }
 }

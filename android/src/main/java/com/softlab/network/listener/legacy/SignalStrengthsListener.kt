@@ -10,8 +10,10 @@ class SignalStrengthsListener(private val eventEmitter: EventEmitter) :
     PhoneStateListener() {
 
     @Deprecated("Deprecated in Java")
-    override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
-        val signalStrengthResult = SignalStrengthConverter.convert(signalStrength)
-        eventEmitter.sendEvent(EventType.SIGNAL_STRENGTH_CHANGED, signalStrengthResult)
+    override fun onSignalStrengthsChanged(signalStrength: SignalStrength?) {
+        if (signalStrength != null) {
+            val signalStrengthResult = SignalStrengthConverter.convert(signalStrength)
+            eventEmitter.sendEvent(EventType.SIGNAL_STRENGTH_CHANGED, signalStrengthResult)
+        }
     }
 }

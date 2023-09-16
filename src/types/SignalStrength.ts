@@ -1,7 +1,7 @@
-export interface SignalStrengthType {
+interface SignalStrengthType {
   dbm: number;
   asuLevel: number;
-  level: number;
+  level?: number; // Available from ANDROID API >= 23
 }
 
 export interface SignalStrengthCdma extends SignalStrengthType {
@@ -15,24 +15,27 @@ export interface SignalStrengthCdma extends SignalStrengthType {
 }
 
 export interface SignalStrengthGsm extends SignalStrengthType {
-  bitErrorRate: number;
-  rssi: number;
-  timingAdvance: number;
+  bitErrorRate?: number; // Available from ANDROID API >= 29
+  rssi?: number; // Available from ANDROID API >= 30
+  timingAdvance?: number; // Available from ANDROID API >= 26
 }
 
 export interface SignalStrengthLte extends SignalStrengthType {
-  cqi: number;
-  cqiTableIndex: number;
-  rsrp: number;
-  rsrq: number;
-  rssi: number;
-  rssnr: number;
+  cqi?: number; // Available from ANDROID API >= 26
+  cqiTableIndex?: number; // Available from ANDROID API >= 31
+  rsrp?: number; // Available from ANDROID API >= 26
+  rsrq?: number; // Available from ANDROID API >= 26
+  rssi?: number; // Available from ANDROID API >= 29
+  rssnr?: number; // Available from ANDROID API >= 26
   timingAdvance: number;
 }
 
+/**
+ * Available from ANDROID API >= 29
+ */
 export interface SignalStrengthNr extends SignalStrengthType {
-  csiCqiReport: number[];
-  csiCqiTableIndex: number;
+  csiCqiReport?: number[]; // Available from ANDROID API >= 31
+  csiCqiTableIndex?: number; // Available from ANDROID API >= 31
   csiRsrp: number;
   csiRsrq: number;
   csiSinr: number;
@@ -46,7 +49,7 @@ export interface SignalStrengthTdscdma extends SignalStrengthType {
 }
 
 export interface SignalStrengthWcdma extends SignalStrengthType {
-  ecNo: number;
+  ecNo?: number; // Available from ANDROID API >= 30
 }
 
 export type SignalStrength =
