@@ -1,0 +1,36 @@
+package com.softlab.network.converter.strength
+
+class SignalStrengthConstants {
+    companion object {
+        const val asuLevel = "asuLevel"
+        const val dBm = "dBm"
+        const val level = "level"
+        const val rssi = "rssi"
+        const val timingAdvance = "timingAdvance"
+        const val bitErrorRate = "bitErrorRate"
+        const val ecNo = "ecNo"
+        const val rscp = "rscp"
+        const val cqi = "cqi"
+        const val cqiTableIndex = "cqiTableIndex"
+        const val rsrp = "rsrp"
+        const val rsrq = "rsrq"
+        const val rssnr = "rssnr"
+        const val csiCqiReport = "csiCqiReport"
+        const val csiCqiTableIndex = "csiCqiTableIndex"
+        const val csiRsrp = "csiRsrp"
+        const val csiRsrq = "csiRsrq"
+        const val csiSinr = "csiSinr"
+        const val ssRsrp = "ssRsrp"
+        const val ssRsrq = "ssRsrq"
+        const val ssSinr = "ssSinr"
+        const val cdmaDbm = "cdmaDbm"
+        const val cdmaEcio = "cdmaEcio"
+        const val cdmaLevel = "cdmaLevel"
+        const val evdoDbm = "evdoDbm"
+        const val evdoEcio = "evdoEcio"
+        const val evdoLevel = "evdoLevel"
+        const val evdoSnr = "evdoSnr"
+        const val timestampMillis = "timestampMillis"
+        const val cellSignalStrengths = "cellSignalStrengths"
+    }
+}
